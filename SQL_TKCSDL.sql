@@ -1,0 +1,1134 @@
+﻿CREATE DATABASE a1
+GO
+USE a1
+GO
+-- TẠO CÁC TABLE
+CREATE TABLE NHANVIEN(
+	MANV CHAR(10) NOT NULL,
+	TEN NVARCHAR(50) NOT NULL,
+	EMAIL VARCHAR(255) UNIQUE,
+	GIOITINH NVARCHAR(10) NOT NULL,
+	SDT CHAR(10) UNIQUE NOT NULL,
+	NGAYSINH DATE NOT NULL,
+	DIACHI NVARCHAR(255) NOT NULL,
+	CHUCVU NVARCHAR(50) NOT NULL
+)
+GO
+CREATE TABLE TRUYEN(
+	MATRUYEN CHAR(10) NOT NULL,
+	MATG CHAR(10) NOT NULL,
+	MANV CHAR(10) NOT NULL,
+	TENTRUYEN NVARCHAR(50) NOT NULL,
+	SOLUONG INT NOT NULL,
+	NXB NVARCHAR(255) NOT NULL
+)
+GO
+CREATE TABLE TACGIA(
+	MATG CHAR(10) NOT NULL,
+	TEN NVARCHAR(50) NOT NULL,
+	NGAYSINH DATE NOT NULL
+)
+GO
+CREATE TABLE DOCGIA(
+	MADG CHAR(10) NOT NULL,
+	TEN NVARCHAR(50) NOT NULL,
+	NGAYSINH DATE NOT NULL,
+	GIOITINH NVARCHAR(10) NOT NULL,
+	SDT CHAR(10) UNIQUE NOT NULL,
+	EMAIL VARCHAR(255) UNIQUE,
+	DIACHI NVARCHAR(255) NOT NULL
+)
+GO
+CREATE TABLE PHIEUMUON(
+	MAPHIEUMUON CHAR(10) NOT NULL,
+	MANV CHAR(10) NOT NULL,
+	MADG CHAR(10) NOT NULL,
+	NGAYMUON DATE NOT NULL,
+	NGAYTRA DATE NOT NULL,
+	TONGSL INT NOT NULL,
+	TINHTRANG NVARCHAR(50) NOT NULL
+)
+GO
+CREATE TABLE DANHSACHMUON(
+	MAPHIEUMUON CHAR(10) NOT NULL,
+	MATRUYEN CHAR(10) NOT NULL,
+	SOLUONG INT NOT NULL
+)
+GO
+-- RANG BUOC KHOA CHINH
+ALTER TABLE NHANVIEN
+ADD CONSTRAINT PK_NHANVIEN PRIMARY KEY(MANV)
+
+ALTER TABLE TRUYEN
+ADD CONSTRAINT PK_TRUYEN PRIMARY KEY(MATRUYEN)
+
+ALTER TABLE TACGIA
+ADD CONSTRAINT PK_TACGIA PRIMARY KEY(MATG)
+
+ALTER TABLE DOCGIA
+ADD CONSTRAINT PK_DOCGIA PRIMARY KEY(MADG)
+
+ALTER TABLE PHIEUMUON
+ADD CONSTRAINT PK_PHIEUMUON PRIMARY KEY(MAPHIEUMUON)
+
+ALTER TABLE DANHSACHMUON
+ADD CONSTRAINT PK_DANHSACHMUON PRIMARY KEY(MAPHIEUMUON, MATRUYEN)
+-- RANG BUOC KHOA NGOAI
+ALTER TABLE TRUYEN
+ADD CONSTRAINT FK1_TRUYEN FOREIGN KEY(MANV) REFERENCES NHANVIEN(MANV)
+
+ALTER TABLE TRUYEN
+ADD CONSTRAINT FK2_TRUYEN FOREIGN KEY(MATG) REFERENCES TACGIA(MATG)
+
+ALTER TABLE PHIEUMUON
+ADD CONSTRAINT FK1_PHIEUMUON FOREIGN KEY(MANV) REFERENCES NHANVIEN(MANV)
+
+ALTER TABLE PHIEUMUON
+ADD CONSTRAINT FK2_PHIEUMUON FOREIGN KEY(MADG) REFERENCES DOCGIA(MADG)
+
+ALTER TABLE DANHSACHMUON
+ADD CONSTRAINT FK1_DANHSACHMUON FOREIGN KEY(MAPHIEUMUON) REFERENCES PHIEUMUON(MAPHIEUMUON)
+
+ALTER TABLE DANHSACHMUON
+ADD CONSTRAINT FK2_DANHSACHMUON FOREIGN KEY(MATRUYEN) REFERENCES TRUYEN(MATRUYEN)
+
+-- RANG BUOC TOAN VEN
+--ALTER TABLE TRUYEN
+--ADD CONSTRAINT RBTV_SOLUONG_TRUYENtest CHECK (SOLUONG >=0)
+
+--ALTER TABLE DANHSACHMUON
+--ADD CONSTRAINT RBTV_SOLUONG_DANHSACHMUON CHECK (SOLUONG >0)
+
+GO
+-- INSERT
+INSERT INTO NHANVIEN 
+VALUES
+	('BV001', N'Nguyễn Hưng Thịnh',      N'Nguyenhungthinh@gmail.com',     'Nam', '0362126144', '1970-03-18', N'1 đường số 8, phường Tăng Nhơn Phú B, tp.Thủ Đức',                       N'Bảo vệ'),
+	('BV002', N'Nguyễn Đình Hoàng Tuấn', N'Nguyendinhhoangtuan@gmail.com', 'Nam', '0358953825', '1975-10-08', N'Đường số 9 Hẻm 96/1- Linh Tây- TP Thủ Đức',					             N'Bảo vệ'),
+	('GS001', N'Phạm Thị Ly',			 N'Phamthily@gmail.com',		   N'Nữ',  '0394721924', '1997-09-12', N'Số 28, đường 449, phường Tăng Nhơn Phú A, TP. Thủ Đức',		             N'Nhân viên giám sát'),
+	('GS002', N'Văn Công Hào',			 N'VanCongHao@gmail.com',		   'Nam', '0397841034', '1995-02-09', N'Đường 385, tăng nhơn phú A, thành phố Thủ Đức',				             N'Giám sát kho'),
+	('K001',  N'Nguyễn Thị Vân Khánh',   N'Nguyenthivankhanh@gmail.com',   N'Nữ',  '0375650646', '2000-09-02', N'131/10 KP. Tân Hiệp, P. Tân Bình, TP. Dĩ An, tỉnh Bình Dương',           N'Nhân viên kho'),
+	('K002',  N'Trần Trọng Nhân',        N'Trantrongnhan@gmail.com',       'Nam', '0359381132', '2000-11-13', N'Số 28, đường 449, phường Tăng Nhơn Phú A, TP. Thủ Đức',		             N'Nhân viên kho'),
+	('KP001', N'Trần Tấn Quốc',          N'Trantanquoc@gmail.com',         'Nam', '0332814102', '1999-01-28', N'Đường số 10, nguyễn văn tăng, tăng nhơn phú B, tp Thủ Đức',              N'Nhân viên kiểm phiếu'),
+	('NV001', N'Kiều Thị Mộng Hiền',     N'Kieuthimonghien@gmail.com',     N'Nữ',  '0348772541', '1999-12-17', N'61/7, đường số 12, phường Tăng Nhơn Phú B, TP Thủ Đức',                  N'Nhân viên trực quầy'),
+	('NV002', N'Nguyễn Thị Phương Nga',  N'Nguyenthiphuongnga@gmail.com',  N'Nữ',  '0353279583', '1997-11-09', N'30 Nguyễn Trung Nguyệt , Bình Trưng Đông , TP.Thủ Đức',                  N'Nhân viên trực quầy'),
+	('NV003', N'Phạm Nguyễn Thùy Dung',  N'Phamnguyenthuydung@gmail.com',  N'Nữ',  '0774757976', '1993-08-25', N'110/15/12 Lò Lu Ích Thạnh Trường Thạnh Thành Phố Thủ Đức',               N'Nhân viên trực quầy'),
+	('PL001', N'Lê Vũ Long',			 N'Levulong@gmail.com',			   'Nam', '0987029203', '1990-10-04', N'23/23/3 Làng Tăng Phú, Tổ 6, Khu Phố 4, P. Tăng Nhơn Phú A, TP Thủ Đức', N'Phó quản lý'),
+	('QL001', N'Trần Đức Anh',			 N'Tranducanh@gmail.com',		   'Nam', '0354855613', '1983-08-14', N'Số 36/17, đường 160, phường Tăng Nhơn Phú A, TP. Thủ Đức',               N'Quản lý'),
+	('PT001', N'Nguyễn Hoàng Nam Kha',   N'Nguyenhoangnamkha@gmail.com',   'Nam', '0862624027', '2001-12-07', N'28B đường 106, phường Tăng Nhơn Phú A, TP. Thủ Đức',                     N'Nhân viên Part time'),
+	('PT002', N'Mai Danh Dũng',          N'Maidanhdung@gmail.com',         'Nam', '0328657868', '2001-01-19', N'416 Lã Xuân Oai, phường Long Trường, TP.Thủ Đức',                        N'Nhân viên Part time');
+GO
+
+INSERT INTO TACGIA 
+VALUES
+	('TPTG', N'Trần Phan Trúc Giang',	'1964-06-13'), 
+	('DN',	 N'Dao Ninh',				'1959-09-10'), 
+	('NM',   N'Ngọc My',				'1989-01-24'), 
+	('MTS',  N'Mạc Thiên Song',			'1988-11-20'),
+	('LTS',  N'Lý Thái Sơn',			'1933-12-01'),
+	('M',    N'Mây',					'2001-10-08'),
+	('NVA',  N'Nguyễn Vân An',			'2001-05-12'),
+	('GA',   N'Gosho Aoyama',			'1964-06-13'),
+	('TH',   N'Tô Hoài',				'1920-09-27'),
+	('FF',   N'Fujiko Fujio',			'1933-12-01'),
+	('NC',   N'Nam Cao',				'1917-10-29'),
+	('NQS',  N'Nguyễn Quang Sáng',		'1932-01-12'),
+	('DC',   N'Dale Carnegie',			'1988-11-24');
+GO
+
+INSERT INTO TRUYEN 
+VALUES
+	('KUCMT',	'TPTG',	'NV001', N'Khế ước của mợ tư',					24, N'Kim Đồng'),
+	('GCCN',	'DN',	'NV001', N'Giá của cái nghèo',					50, N'Kim Đồng'),
+	('MM',		'NM',	'NV001', N'Mợ mận',								50, N'Kim Đồng'),
+	('CTTGMNX',	'MTS',	'NV001', N'Chàng trai trong giấc mơ năm xưa',	59, N'Kim Đồng'),
+	('NDAB',	'MTS',	'NV001', N'Nhân duyên an bài',					59, N'Kim Đồng'),
+	('KCNN',	'MTS',	'NV001', N'Khoảng cách ngàn năm',				59, N'Kim Đồng'),
+	('CGDC',	'LTS',	'NV001', N'Con gái địa chủ',					59, N'Kim Đồng'),
+	('CN001',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 1',		27, N'Kim Đồng'),
+	('CN002',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 2',		39, N'Kim Đồng'),
+	('CN003',	'GA',	'NV001', N'Thám tử lừng danh Conan tập 3',		25, N'Kim Đồng'),
+	('CN004',	'GA',	'NV002', N'Thám tử lừng danh Conan tập 4',		24, N'Kim Đồng'),
+	('CN005',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 5',		35, N'Kim Đồng'),
+	('CN006',	'GA',	'NV001', N'Thám tử lừng danh Conan tập 6',		44, N'Kim Đồng'),
+	('CN007',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 7',		49, N'Kim Đồng'),
+	('CN008',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 8',		35, N'Kim Đồng'),
+	('CN009',	'GA',	'NV002', N'Thám tử lừng danh Conan tập 9',		23, N'Kim Đồng'),
+	('CN010',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 10',		24, N'Kim Đồng'),
+	('CN011',	'GA',	'NV002', N'Thám tử lừng danh Conan tập 11',		39, N'Kim Đồng'),
+	('CN012',	'GA',	'NV003', N'Thám tử lừng danh Conan tập 12',		25, N'Kim Đồng'),
+	('CN013',	'GA',	'NV001', N'Thám tử lừng danh Conan tập 13',		33, N'Kim Đồng'),
+	('CN014',	'GA',	'NV002', N'Thám tử lừng danh Conan tập 14',		34, N'Kim Đồng'),
+	('NKUKCNY',	'TH',	'NV001', N'Những ký ức không chịu ngủ yên',		40, N'Kim Đồng'),
+	('NN',		'TH',	'NV002', N'Nhà nghèo',							23, N'Kim Đồng'),
+	('D',		'FF',	'NV002', N'Doraemon tập 1',						40, N'Kim Đồng'),
+	('DD001',	'FF',	'NV003', N'Doraemon truyện dài tập 1',			32, N'Kim Đồng'),
+	('DN001',	'FF',	'NV002', N'Doraemon truyện ngắn tập 1',			39, N'Kim Đồng'),
+	('DN002',	'FF',	'NV003', N'Doraemon truyện ngắn tập 2',			43, N'Kim Đồng'),
+	('CP',		'NC',	'NV002', N'Chí Phèo',							28, N'Văn học'),
+	('DMPLK',	'NC',	'NV001', N'Dế Mèn Phiêu Lưu Ký',				37, N'Văn học'),
+	('LH',		'NC',	'NV001', N'Lão Hạc',							38, N'Văn học'),
+	('DDXC',	'NC',	'NV003', N'Đầu đường xó chợ',					35, N'Kim Đồng'),
+	('BCT',		'NQS',	'NV002', N'Bông cẩm thạch',						19, N'Kim Đồng'),
+	('NVVL',	'NQS',	'NV002', N'Nhà văn về làng',					25, N'Kim Đồng'),
+	('ĐNT',		'DC',	'NV003', N'Đắc Nhân Tâm',						29, N'Kim Đồng');
+GO
+
+INSERT INTO DOCGIA 
+VALUES
+	('HTKL',	N'Hồ Thị Kiều Linh ',	'2002-01-20', N'Nữ',	 '0987632849', 'Hothikieulinh@gmail.com',	N'Số 28, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đức'),
+	('NHP',		N'Nguyễn Hoàng Phát ',	'2002-09-21', 'Nam', '0817937865', 'Nguyenhoangphat@gmail.com', N'Chung cư SKY9, phường phú hữu, TP. Thủ Đức'),
+	('VMT',		N'Vạn Minh Ty  ',		'2000-03-24', 'Nam', '0379020715', 'Vanminhty@gmail.com',		N'Chợ nhỏ nông lâm, TP. Thủ Đức'),
+	('TNS',		N'Trần Ngọc Sang  ',	'2001-07-12', 'Nam', '0905102884', 'Tranngocsang@gmail.com',	N'87/6 đường 104,p.tăng nhơn phú A,Tp.Thủ Đức'),
+	('LBKT',	N'Lê Bá Khánh Trình  ', '2000-01-02', 'Nam', '0337880587', 'Lebakhanhtrinh@gmail.com',	N'C24/9 đường 449, phường Tăng Nhơn Phú A, TP. Thủ Đức'),
+	('TQT',		N'Trần Quang Thắng ',	'1997-01-19', 'Nam', '0342925377', 'Tranquangthang@gmail.com',	N'Hẻm 146 Lã Xuân Oai,P.Tăng Nhơn Phú A,TP.Thủ Đức'),
+	('THT',		N'Trần Hoàng Triều ',	'1990-12-05', 'Nam', '0916341320', 'Tranhoangtrieu@gmail.com',	N'87/22/41, Bành Văn Trân,  Phường 7, Tân Bình, TP.HCM.'),
+	
+	('NCA',		N'Nguyễn Cao An ',		'2003-11-10', 'Nam', '0915579872', 'NguyenCaoAn@gmail.com',		N'7/8 Đường 385, Hiệp Phú, Quận 9, Tp Thủ Đức'),
+	('HTM',		N'Huỳnh Tuấn Minh ',	'2005-03-12', 'Nam', '0932047892', 'Huynhtuanminh@gmail.com',	N'7/50 Đường 182, Phường Tăng Nhơn Phú A, TP. Thủ Đức'),
+	('NNL',		N'Nguyễn Ngọc Lễ  ',	'2004-07-07', 'Nam', '0337378867', 'Nguyenngocle@gmail.com',	N'64/1 Tân Hòa 2, phường Hiệp Phú, Tp. Thủ Đức'),
+	('NTL',		N'Nguyễn Thành Liêm ',	'1999-06-05', 'Nam', '0327780481', 'Nguyenthanhliem@gmail.com', N'65/1 Tân Hòa 2, phường Hiệp Phú, Tp. Thủ Đức'),
+	('TTD',		N'Trần Thanh Dương  ',	'2003-08-04', 'Nam', '0901497506', 'Tranthanhduong@gmail.com',	N'107/13/07,đường 11, phường 11, quận Gò Vấp, TPHCM'),
+	('CQN',		N'Châu Quế Nhơn',		'2012-10-12', 'Nam', '0848611127', 'Chauquenhon@gmail.com',		N'210/7/7 đường 11, phường Trường Thọ, Tp. Thủ Đức'),
+	('LNT',		N'Lưu Nhật Thành',		'2006-11-10', 'Nam', '0393247391', 'Luunhatthanh@gmail.com',	N'25a đường 24, phường Linh Đông, Tp. Thủ Đức');
+GO
+
+INSERT INTO PHIEUMUON 
+VALUES
+	('PM00001','NV001', 'HTKL', '2022- 08- 26',	'2022-10-26', 7, N'Chưa trả'),
+	('PM00002','NV002', 'NHP',	'2022- 08- 29', '2022-10-29', 5, N'Chưa trả'),
+	('PM00003','NV003', 'VMT',	'2022- 08- 20', '2022-10-17', 4, N'Đã trả'),
+	('PM00004','NV001', 'TNS',	'2022- 08- 19', '2022-10-19', 4, N'Chưa trả'),
+	('PM00005','NV003', 'LBKT', '2022- 08- 23', '2022-10-23', 6, N'Chưa trả'),
+	('PM00006','NV001', 'TQT',	'2022- 08- 25', '2022-10-25', 8, N'Chưa trả'),
+	('PM00007','NV002', 'THT',	'2022- 08- 29', '2022-08-26', 9, N'Qúa hạn'),
+	('PM00008','NV001', 'NCA',	'2022- 08- 26', '2022-10-26', 8, N'Chưa trả'),
+	('PM00009','NV001', 'HTM',	'2022- 08- 21',' 2022-10-21', 6, N'Chưa trả'),
+	('PM00010','NV003', 'NNL',	'2022- 08- 20', '2022-10-20', 6, N'Chưa trả'),
+	('PM00011','NV003', 'NTL',	'2022- 08- 18', '2022-07-18', 10, N'Qúa hạn'),
+	('PM00012','NV002', 'TTD',	'2022- 08- 18', '2022-10-18', 4, N'Chưa trả'),
+	('PM00013','NV003', 'CQN',	'2022- 08- 29', '2022-10-29', 4, N'Chưa trả'),
+	('PM00014','NV003', 'LNT',	'2022- 08- 27', '2022-10-27', 6, N'Chưa trả'),
+	('PM00015','NV002', 'VMT',	'2022- 08- 24', '2022-10-24', 7, N'Chưa trả'),
+	('PM00016','NV003', 'NTL',	'2022- 08- 24', '2022-10-24', 6, N'Chưa trả');
+GO
+
+INSERT INTO DANHSACHMUON 
+VALUES
+	('PM00001', 'CN007',	2),
+	('PM00001', 'DDXC',		1),
+	('PM00001', 'D',		3),
+	('PM00001', 'KUCMT',		1),
+	('PM00002', 'NN',	3),
+	('PM00002', 'MM',		1),
+	('PM00002', 'GCCN',		1),
+	
+	
+	('PM00003', 'CTTGMNX',	1),
+	('PM00003', 'NDAB',		1),
+	('PM00003', 'KCNN',		1),
+	('PM00003', 'CGDC',		1),
+
+	('PM00004', 'CN004',	2),
+	('PM00004', 'CN005',	1),
+	('PM00004', 'CN003',	1),
+	
+	('PM00005', 'CN004',	1),
+	('PM00005', 'CN005',	2),
+	('PM00005', 'CN006',	3),
+	
+
+	('PM00006', 'CN005',	8),
+
+	('PM00007', 'NN',		1),
+	('PM00007', 'CN003',		2),
+	('PM00007', 'CN001',	2),
+	('PM00007', 'DD001',	4),
+
+	('PM00008', 'DD001',	1),
+	('PM00008', 'DN001',	2),
+	('PM00008', 'DN002',	1),
+	('PM00008', 'DDXC',		1),
+	('PM00008', 'BCT',		2),
+	('PM00008', 'LH',		1),
+
+	('PM00009', 'LH',		2),
+	('PM00009', 'CN009',	2),
+	('PM00009', 'NVVL',		2),
+
+	('PM00010', 'BCT',		2),
+	
+	('PM00010', 'ĐNT',		1),
+	
+	('PM00010', 'CN011',	1),
+	('PM00010', 'LH',		2),
+
+	('PM00011', 'CN012',	4),
+	('PM00011', 'ĐNT',		3),
+	('PM00011', 'NVVL',		3),
+
+	('PM00012', 'CN010',	1),
+	('PM00012', 'DDXC',		1),
+	('PM00012', 'NN',		2),
+
+	('PM00013', 'CN014',	1),
+	('PM00013', 'CP',		1),
+	('PM00013', 'LH',		1),
+	('PM00013', 'CN001',		1),
+
+	('PM00014', 'CN011',	2),
+	('PM00014', 'DDXC',		1),	
+	('PM00014', 'CN002',		2),
+	('PM00014', 'KUCMT',	1),
+
+	('PM00015', 'LH',	2),
+	('PM00015', 'GCCN',		1),
+	('PM00015', 'ĐNT',		2),
+	('PM00015', 'MM',		2),
+
+	('PM00016', 'BCT',		1),
+	('PM00016', 'KCNN',		3),
+	('PM00016', 'NDAB',		2)
+GO
+-- TAO THU TUC
+	-- KHONG CO THAM SO
+-- THEM NHAN VIEN
+SELECT * FROM NHANVIEN
+CREATE PROC sp_ThemNhanVien
+AS
+BEGIN
+	INSERT INTO NHANVIEN
+	VALUES('NNN', N'Nguyễn Thái Qúy',  N'Nguy88haiquy@gmail.com',  N'Nữ',  '0977757996', '1993-09-22', N'111/15/12 Lò Lu Ích Thạnh Tr7777nh Thành Phố Thủ Đức',               N'Nhân viên trực quầy')
+END;
+EXEC sp_ThemNhanVien
+GO
+SELECT * FROM TRUYEN
+
+-- THEM TRUYEN
+CREATE PROC sp_ThemTruyen
+AS
+BEGIN
+	INSERT INTO TRUYEN
+	VALUES('LL',	'DN',	'NV001', N'Lọ lem',					24, N'Kim Đồng')
+END;
+EXEC sp_ThemTruyen
+GO
+DROP PROC sp_ThemTruyen
+
+-- THEM TAC GIA
+SELECT * FROM TACGIA
+CREATE PROC sp_ThemTacGia
+AS
+BEGIN
+	INSERT INTO TACGIA
+	VALUES('CP1', N'Charles Perrault',	'1628-01-12')
+END;
+EXEC sp_ThemTacGia
+GO
+
+SELECT * FROM DOCGIA
+-- THEM DOC GIA
+CREATE PROC sp_ThemDocGia
+AS
+BEGIN
+	INSERT INTO DOCGIA
+	VALUES('NNT',	N'Nguyễn Ngân Trúc',	'2002-02-06', N'Nữ',	 '0987632646', 'Nguyenngantruc@gmail.com',	N'112/10, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đức')
+END;
+EXEC sp_ThemDocGia
+GO
+SELECT * FROM PHIEUMUON
+-- THEM PHIEU MUON
+CREATE PROC sp_ThemPhieuMuon
+
+AS
+BEGIN
+	INSERT INTO PHIEUMUON
+	VALUES('PM000017','NV001', 'HTKL', '2022- 09- 26',	'2022-11-26', 7, N'Chưa trả')
+END;
+EXEC sp_ThemPhieuMuon
+GO
+DROP PROC sp_ThemPhieuMuon
+
+SELECT * FROM DANHSACHMUON
+-- THEM DANH SACH MUON
+CREATE PROC sp_ThemDanhSachMuon
+AS
+BEGIN
+	INSERT INTO DANHSACHMUON
+	VALUES('PM000017', 'CN007',	2),
+		('PM000017', 'DDXC',		1),
+		('PM000017', 'D',		3),
+		('PM000017', 'KUCMT',		1)
+END;
+EXEC sp_ThemDanhSachMuon
+GO
+
+	-- CO THAM SO
+SELECT * FROM NHANVIEN
+-- THEM NHAN VIEN
+CREATE PROC sp_ThemNhanVienTS(
+	@MaNV CHAR(10),
+	@TEN NVARCHAR(50) ,
+	@EMAIL VARCHAR(255) ,
+	@GIOITINH NVARCHAR(10) ,
+	@SDT CHAR(10) ,
+	@NGAYSINH DATE ,
+	@DIACHI NVARCHAR(255) ,
+	@CHUCVU NVARCHAR(50) )
+AS
+BEGIN	
+	INSERT INTO NHANVIEN
+	VALUES(@MaNV, @TEN,@EMAIL,@GIOITINH,@SDT,@NGAYSINH,@DIACHI,@CHUCVU)
+END;
+DROP PROC sp_ThemNhanVienTS
+
+sp_ThemNhanVienTS 'QQQQ', N'Quỳnh',  N'Nguyenthaiquy@gmail.com',  N'Nữ',  '0974757996', '1993-09-22', N'111/15/12 Lò Lu Ích Thạnh Trường Thạnh Thành Phố Thủ Đức',               N'Nhân viên trực quầy'
+
+SELECT * FROM TRUYEN
+-- THEM TRUYEN
+CREATE PROC sp_ThemTruyenTS(
+	@MATRUYEN CHAR(10),
+	@MATG CHAR(10),
+	@MANV CHAR(10),
+	@TENTRUYEN NVARCHAR(50),
+	@SOLUONG INT,
+	@THELOAI NVARCHAR(255))
+AS
+BEGIN
+	INSERT INTO TRUYEN
+	VALUES(@MATRUYEN, @MATG, @MANV, @TENTRUYEN, @SOLUONG, @THELOAI)
+END;
+sp_ThemTruyenTS 'KKKK',	'DN',	'NV001', N'Lọ lem',					24, N'Kim Đồng'
+	
+SELECT * FROM TACGIA
+-- THEM TAC GIA
+CREATE PROC sp_ThemTacGiaTS(
+	@MATG CHAR(10) ,
+	@TEN NVARCHAR(50) ,
+	@NGAYSINH DATE )
+AS
+BEGIN
+	INSERT INTO TACGIA
+	VALUES(@MATG, @TEN, @NGAYSINH)
+END;
+sp_ThemTacGiaTS 'NĐC', N'Nguyễn Đổng Chi',	'1915-04-27'
+
+SELECT * FROM DOCGIA
+-- THEM DOC GIA
+CREATE PROC sp_ThemDocGiaTS(
+	@MADG CHAR(10),
+	@TEN NVARCHAR(50) ,
+	@NGAYSINH DATE ,
+	@GIOITINH NVARCHAR(10) ,
+	@SDT CHAR(10) ,
+	@EMAIL VARCHAR(255),
+	@DIACHI NVARCHAR(255) )
+AS
+BEGIN	
+	INSERT INTO DOCGIA
+	VALUES(@MADG, @TEN, @NGAYSINH, @GIOITINH, @SDT, @EMAIL, @DIACHI)
+END;
+sp_ThemDocGiaTS 'NVH',		N'Nguyễn Vũ Hoàng  ',	'1985-10-01', 'Nam', '0917937965', 'Nguyenvuhoang@gmail.com', N'Chung cư SKW3, phường phú hữu, TP. Thủ Đức'
+
+SELECT * FROM PHIEUMUON
+-- THEM PHIEU MUON
+CREATE PROC sp_ThemPhieuMuonTS(
+	@MAPHIEUMUON CHAR(10) ,
+	@MANV CHAR(10) ,
+	@MADG CHAR(10) ,
+	@NGAYMUON DATE ,
+	@NGAYTRA DATE ,
+	@TONGSL INT, 
+	@TINHTRANG NVARCHAR(50))
+AS
+BEGIN
+	INSERT INTO PHIEUMUON
+	VALUES(@MAPHIEUMUON, @MANV, @MADG, @NGAYMUON , @NGAYTRA, @TONGSL,  @TINHTRANG)
+END;
+sp_ThemPhieuMuonTS 'PM000018','NV001', 'NVH', '2022- 08- 26',	'2022-10-26', 6, N'Chưa trả'
+
+SELECT * FROM DANHSACHMUON
+-- THEM DANH SACH MUON
+CREATE PROC sp_ThemDanhSachMuonTS(
+	@MAPHIEUMUON CHAR(10) ,
+	@MATRUYEN CHAR(10) ,
+	@SOLUONG INT)
+AS
+BEGIN
+	INSERT INTO DANHSACHMUON
+	VALUES(@MAPHIEUMUON, @MATRUYEN, @SOLUONG)
+END;
+sp_ThemDanhSachMuonTS 'PM000018', 'CN007',	3
+sp_ThemDanhSachMuonTS 'PM000018', 'DDXC',		3
+					  
+
+-- XOA 
+-- XÓA 1 NHÂN VIÊN CỤ THỂ
+SELECT * FROM NHANVIEN
+
+CREATE PROC sp_XoaNhanVien(@MaNV CHAR(10))
+AS
+BEGIN
+	DELETE FROM NHANVIEN
+	WHERE MANV = @MaNV
+END
+sp_XoaNhanVien 'NNN'
+
+SELECT * FROM TRUYEN
+-- XÓA 1 TRUYỆN CỤ THỂ
+CREATE PROC sp_XoaTruyen(@MaT CHAR(10))
+AS
+BEGIN
+	DELETE FROM TRUYEN
+	WHERE MATRUYEN = @MaT
+END;
+sp_XoaTruyen 'LK' -- KHONG THE XOA TRUYEN CO SO LUONG > 0
+
+-- XÓA 1 ĐỘC GIẢ CỤ THỂ
+SELECT * FROM DOCGIA
+CREATE PROC sp_XoaDocGia(@MaDG CHAR(10))
+AS
+BEGIN
+	DELETE FROM DOCGIA
+	WHERE MADG = @MaDG
+END;
+sp_XoaDocGia 'VM' -- KHONG THE XOA DOC GIA CO SO LUONG TRUYEN DANG MUON > 0
+
+
+-- XÓA 1 TÁC GIẢ CỤ THỂ
+SELECT * FROM TACGIA
+CREATE PROC sp_XoaTacGia(@MaTG CHAR(10))
+AS
+BEGIN
+	DELETE FROM TACGIA
+	WHERE MATG = @MaTG
+END;
+sp_XoaTacGia 'NKK' -- KHONG THE XOA TAC GIA CO SO LUONG TRUYEN TRONG KHO > 0
+
+
+-- XÓA 1 DANH SÁCH MƯỢN CỤ THỂ
+SELECT * FROM DANHSACHMUON
+CREATE PROC sp_XoaDanhSachMuon(@MaPM CHAR(10), @MaT CHAR(10))
+AS
+BEGIN
+	DELETE FROM DANHSACHMUON
+	WHERE MAPHIEUMUON = @MaPM AND MATRUYEN = @MaT
+END;
+sp_XoaDanhSachMuon 'PM00001', 'D'
+
+
+-- XÓA 1 PHIẾU MƯỢN CỤ THỂ
+SELECT * FROM PHIEUMUON
+CREATE PROC sp_XoaPhieuMuon(@MaPM CHAR(10))
+AS
+BEGIN
+	DELETE FROM PHIEUMUON
+	WHERE MAPHIEUMUON = @MaPM
+END;
+sp_XoaPhieuMuon 'PM00' -- KHONG THE XOA PHIEU MUON CO DANH SACH MUON 
+
+-- PROC 
+-- 1 LAY RA THONG TIN PHIEU MUON CO SO LUONG MUON NHIEU NHAT
+
+CREATE PROC sp_MuonNhieuNhat
+AS
+BEGIN
+	SELECT *
+	FROM PHIEUMUON 
+	WHERE TONGSL = (
+	SELECT TOP 1 TONGSL
+	FROM PHIEUMUON
+	ORDER BY TONGSL DESC
+	)
+END;
+EXEC sp_MuonNhieuNhat
+GO
+-- 2 XUẤT RA THÔNG TIN ĐỘC GIẢ MƯỢN TRUYỆN TRONG NGÀY DO NGƯỜI DÙNG NHẬP
+CREATE PROC sp_ThongTinDocGia
+(@NgayMuon Date)
+AS
+BEGIN
+	SELECT *
+	FROM DOCGIA AS DG,PHIEUMUON AS P
+	WHERE P.NGAYMUON=@NgayMuon
+END;
+EXEC sp_ThongTinDocGia'2022-08-24'
+GO
+--3 LẤY RA TÊN SỐ PHIẾU MƯỢN CỦA ĐỘC GIẢ DỰA VÀO MÃ ĐỘC GIẢ
+CREATE PROC sp_PhieuMuonSach
+AS
+BEGIN
+	SELECT a.TEN, COUNT(a.MADG)AS sophieu from DOCGIA a ,PHIEUMUON b
+	WHERE a.MADG=b.MADG
+	GROUP BY a.MADG ,a.TEN
+END
+EXEC sp_PhieuMuonSach
+GO
+
+-- 4 LẤY RA TÊN TÁC GIẢ VÀ SỐ CUỐN SÁCH CỦA TÁC GIẢ CÓ TRONG THƯ VIÊN;
+CREATE PROC Sp_Sachcuatacgia
+AS
+BEGIN
+	SELECT  a.TEN ,COUNT(a.MATG) as sosach from TACGIA a ,TRUYEN t
+	WHERE a.MATG=t.MATG
+	GROUP BY a.TEN,a.MATG
+END;
+EXEC Sp_Sachcuatacgia
+GO
+-- 5 LẤY RA THÔNG TIN QUYỂN TRUYỆN ĐƯỢC MƯỢN NHIỀU NHẤT
+CREATE PROC Sp_truyenYeuThich
+AS
+BEGIN
+	SELECT * FROM TRUYEN
+	WHERE MATRUYEN IN (SELECT TOP 1 MATRUYEN FROM DANHSACHMUON
+					   ORDER BY SOLUONG ASC)
+END;
+EXEC Sp_truyenYeuThich
+GO
+-- 6 UPDATE THÔNG TIN NHÂN VIÊN 
+CREATE PROC Sp_SuaNhanVien(
+	@MANV CHAR(10),
+	@TEN NVARCHAR(100),
+	@EMAIL CHAR(50),
+	@GIOITINH NVARCHAR(10),
+	@SDT CHAR(10),
+	@NGAYSINH DATE,
+	@DIACHI NVARCHAR(50),
+	@CHUCVU NVARCHAR(100))
+AS 
+BEGIN
+	UPDATE  NHANVIEN 
+	SET TEN=@TEN,EMAIL=@EMAIL,GIOITINH=@GIOITINH,SDT=@SDT,NGAYSINH=@NGAYSINH,DIACHI=@DIACHI,CHUCVU=@CHUCVU WHERE MANV=@MANV
+END;
+EXEC Sp_SuaNhanVien 'NV001', N'Mai Điệp UPDATE',          N'Maidiep@gmail.com',         'Nam', '0362657868', '2001-01-20', N'916 Lã Xuân Oai, phường Long Trường, TP.Thủ Đức',                        N'Nhân viên Part time'
+GO
+SELECT * FROM NHANVIEN
+
+--7 UPDATE THÔNG TIN ĐỘC GIẢ
+SELECT * FROM DOCGIA
+CREATE PROC Sp_SuaDocgia(
+	 @MADG CHAR(7),
+	 @TEN NVARCHAR(50),
+	 @NGAYSINH DATE,
+	 @GIOITINH NVARCHAR(50),
+	 @SDT CHAR(10),
+	 @EMAIL CHAR(50),
+	 @DIACHI NVARCHAR(200))
+AS
+BEGIN
+	UPDATE DOCGIA 
+	SET TEN=@TEN,NGAYSINH=@NGAYSINH,GIOITINH=@GIOITINH,SDT=@SDT,EMAIL=@EMAIL,DIACHI=@DIACHI WHERE MADG=@MADG 
+END;
+EXEC Sp_SuaDocgia 'CQN', N'Nguyễn Ngọc Gia Bảo UPDATE','2002-04-07', 'Nam', '036504888', 'CuaXamNao@gmail.com', N'Châu Thành, Long An'
+GO
+
+--8 LẤY RA TÁC GIẢ CÓ SỐ TRUYỆN NHIỀU NHẤT TRONG THƯ VIÊN
+CREATE PROC sp_Tacgiaduocyeuthichnhat
+AS
+BEGIN
+	SELECT TOP 1 a.MATG ,a.TEN,COUNT(a.MATG) AS SOTRUYEN FROM TACGIA  a ,TRUYEN b
+	WHERE a.MATG=b.MATG
+	GROUP BY a.MATG,a.TEN
+	ORDER BY SOTRUYEN DESC
+END;	
+EXEC sp_Tacgiaduocyeuthichnhat
+GO
+SELECT * FROM TRUYEN
+
+--9 LẤY RA SỐ TRUYỆN CÒN LẠI TRONG THƯ VIỆN SỐ TRUYỆN HIỆN TẠI = SỐ TRUYỆN CÓ - SỐ TRUYỆN ĐÃ ĐƯỢC MƯỢN
+CREATE PROC sp_Soluongtuyen
+AS
+BEGIN
+	SELECT t.MATRUYEN ,t.TENTRUYEN ,(t.SOLUONG-d.SOLUONG) AS SOLUONGHIENTAI FROM TRUYEN t, DANHSACHMUON d
+	WHERE t.MATRUYEN=d.MATRUYEN
+END;
+EXEC sp_Soluongtuyen
+GO
+
+SELECT * FROM TRUYEN -- NHAN DUYEN AN BAI 59 -> 57
+--10 LẤY RA THÔNG TIN ĐỘC GIẢ CÓ NGÀY TRẢ SÁCH LÀ NGÀY BẤT KÌ DO NGƯỜI DÙNG NHẬP
+ CREATE PROC sp_laythongtindocgia(@ngaytra DATE )
+ AS
+ BEGIN
+	 SELECT  d.MADG,d.TEN FROM DOCGIA d, PHIEUMUON p
+	 WHERE d.MADG=p.MADG and p.NGAYTRA=@ngaytra
+ END;
+ EXEC sp_laythongtindocgia '2022-10-20'
+ GO
+
+--11 LẤY RA THÔNG TIN NHÂN VIÊN TRỰC QUẦY VÀ CHO BIẾT SỐ PHIẾU MƯỢN HỌ LẬP ĐƯỢC
+ CREATE PROC sp_thongtinnhanvien
+ AS
+ BEGIN
+	 SELECT n.MANV ,n.TEN ,n.CHUCVU ,COUNT(n.MANV)as SOPHIEUDALAP from NHANVIEN n ,PHIEUMUON p
+	 WHERE n.MANV =p.MANV
+	 GROUP BY n.MANV ,n.TEN ,n.CHUCVU
+ END;
+ EXEC sp_thongtinnhanvien
+ GO
+ --TRIGGER
+ -- NHÂN VIÊN
+ --CÂU 1: TRIGGER GIỚI TÍNH NHÂN VIÊN CHỈ LÀ NAM HOẶC NỮ
+CREATE TRIGGER TR_NHANVIEN_GIOITINH
+ON NHANVIEN
+FOR INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @gt NVARCHAR(3)
+	SELECT @gt = GioiTinh FROM INSERTED
+	IF (@gt NOT LIKE N'Nam' AND @gt NOT LIKE N'Nữ')
+		BEGIN
+		PRINT N'Phái phải là Nam hoặc là Nữ'
+		ROLLBACK TRAN
+		END;
+END;
+GO
+
+INSERT INTO NHANVIEN
+VALUES('K003',  N'Nguyễn Thị Vân Anh',   N'Nguyenthivananh@gmail.com',   N'LGB',  '0375650323', '2000-11-02', N'139/10 KP. Tân Hiệp, P. Tân Bình, TP. Dĩ An, tỉnh Bình Dương',           N'Nhân viên kho')
+ --CÂU 2: TRIGGER KIỂM TRA EMAIL NHÂN VIÊN CÓ ĐÚNG ĐỊNH DẠNG @GMAIL.COM KHÔNG?
+CREATE TRIGGER tr_EmailNV
+ON NHANVIEN
+FOR INSERT, UPDATE
+AS
+	BEGIN
+		DECLARE @EMAIL CHAR(50)
+		SELECT @EMAIL=EMAIL
+		FROM INSERTED
+
+		IF(CHARINDEX('@gmail.com',@EMAIL)=0)
+		BEGIN
+			PRINT N'Email không hợp lệ';
+			ROLLBACK TRAN
+		END
+	END
+INSERT INTO NHANVIEN
+VALUES('K003',  N'Nguyễn Thị Vân Anh',   N'Nguyenthivananh.com',   N'Nam',  '0375650323', '2000-11-02', N'139/10 KP. Tân Hiệp, P. Tân Bình, TP. Dĩ An, tỉnh Bình Dương',           N'Nhân viên kho')
+ --CÂU 3: TRIGGER KIỂM TRA SỐ ĐIỆN THOẠI NHÂN VIÊN CÓ ĐÚNG ĐỊNH DẠNG
+ALTER TRIGGER tr_SDTNV
+ON NHANVIEN
+FOR INSERT, UPDATE
+AS
+	BEGIN
+		DECLARE @SDT CHAR(10)
+		SELECT @SDT=SDT
+		FROM INSERTED
+
+		IF(LEN(@SDT)!=10 ) 
+		BEGIN
+			PRINT N'Số điện thoại phải có 10 số';
+			ROLLBACK TRAN
+		END
+		IF((CHARINDEX(LEFT(@SDT,1), '0')=0))
+		BEGIN
+			PRINT N'Số điện thoại phải bắt đầu bằng số 0';
+			ROLLBACK TRAN
+		END
+	END
+
+-- KHONG DU 10 SO
+INSERT INTO NHANVIEN
+VALUES('K003',  N'Nguyễn Thị Vân Anh',   N'Nguyenthivananh@gmail.com',   N'Nam',  '037565032', '2000-11-02', N'139/10 KP. Tân Hiệp, P. Tân Bình, TP. Dĩ An, tỉnh Bình Dương',           N'Nhân viên kho')
+-- KHONG BAT DAU BANG SO 0
+INSERT INTO NHANVIEN
+VALUES('K003',  N'Nguyễn Thị Vân Anh',   N'Nguyenthivananh@gmail.com',   N'Nam',  '3756503222', '2000-11-02', N'139/10 KP. Tân Hiệp, P. Tân Bình, TP. Dĩ An, tỉnh Bình Dương',           N'Nhân viên kho')
+ --CÂU 4: TRIGGER KIỂM TRA NGÀY SINH CỦA NHÂN VIÊN PHẢI ĐỦ 18 TUỔI
+ALTER TRIGGER TR_NgaySinhNV
+ON NHANVIEN 
+FOR INSERT,UPDATE
+AS
+BEGIN
+	DECLARE @NGAYSINH DATETIME
+	SELECT @NGAYSINH = NGAYSINH
+	FROM INSERTED
+	IF (YEAR(GETDATE()) < YEAR(@NGAYSINH))
+		BEGIN
+			PRINT N'Ngày sinh phải bé hơn ngày hiện tại'
+			ROLLBACK TRAN
+		END
+	IF (YEAR(GETDATE())-YEAR(@NGAYSINH) < 18 )
+		BEGIN
+			PRINT N'Nhân viên chưa đủ 18 tuổi';
+			ROLLBACK TRAN
+		END
+END
+
+INSERT INTO NHANVIEN
+VALUES('K003',  N'Nguyễn Thị Vân Anh',   N'Nguyenthivananh@gmail.com',   N'Nam',  '0375650322', '2028-11-02', N'139/10 KP. Tân Hiệp, P. Tân Bình, TP. Dĩ An, tỉnh Bình Dương',           N'Nhân viên kho')
+ --CÂU 5: KHÔNG ĐƯỢC XÓA NHÂN VIÊN KHI KHÔNG TỒN TẠI MÃ NHÂN VIÊN 
+CREATE TRIGGER tr_delNV
+ON NHANVIEN 
+FOR DELETE
+AS
+BEGIN
+	DECLARE @COUNT1 INT=0
+	SELECT @COUNT1 = COUNT(*)
+	FROM DELETED JOIN NHANVIEN ON DELETED.MANV=NHANVIEN.MANV
+	IF(@COUNT1=0)
+	BEGIN
+		PRINT N'Không thể xóa nhân viên do mã nhân viên không tồn tại';
+		ROLLBACK TRAN
+	END
+END
+
+DELETE FROM NHANVIEN WHERE MANV='ILU'
+
+--DOC GIA--
+--CÂU 1: TRIGGER KIỂM TRA NGÀY SINH CỦA ĐỘC GIẢ
+-- NHỎ HƠN NGÀY HIỆN TẠI
+-- ĐỘC GIẢ PHẢI > = 11 TUỔI MỚI ĐƯỢC MƯỢN TRUYỆN
+ALTER TRIGGER TR_NgaySinhDG
+ON DOCGIA
+FOR INSERT,UPDATE
+AS
+BEGIN
+	DECLARE @NGAYSINH DATETIME
+	SELECT @NGAYSINH = NGAYSINH
+	FROM INSERTED
+	IF (@NGAYSINH > GETDATE())
+		BEGIN
+			PRINT N'Ngày sinh vượt quá ngày hiện tại';
+			ROLLBACK TRAN
+		END
+	IF ((YEAR(GETDATE())- YEAR(@NGAYSINH)) < 11 )
+		BEGIN
+			PRINT N'Độc giả phải >= 11 tuổi';
+			ROLLBACK TRAN
+		END
+END
+INSERT INTO DOCGIA 
+VALUE
+	('HK',	N'Hồ Thị Kiều',	'2023-01-20', N'Nữ',	 '0987632838', 'Hothikieu@gail.com',	N'Số 288, đường 4, phường Tăng Nhơn Phú B,TP. Thủ Đức')
+
+
+INSERT INTO DOCGIA 
+VALUES
+	('K',	N'Hồ Thị Kiều',	'2013-01-20', N'Nữ',	 '0787632840', 'Hthikieu@gmail.com',	N'Số 280, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đc')
+--CÂU 2: TRIGGER KIỂM TRA GIỚI TÍNH CỦA ĐỘC GIẢ CHỈ LÀ NAM HOẶC NỮ
+ALTER TRIGGER tr_GioiTinhDG
+ON DOCGIA
+AFTER INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @gt NVARCHAR(3)
+	SELECT @gt = GioiTinh FROM INSERTED
+	IF (@gt NOT LIKE N'Nam' AND @gt NOT LIKE N'Nữ')
+		BEGIN
+			PRINT N'Phái phải là Nam hoặc là Nữ'
+			ROLLBACK TRAN
+		END
+END
+INSERT INTO DOCGIA 
+VALUES
+	('HTK',	N'Hồ Thị Kiều',	'1999-01-20', N'GBT',	 '0987632840', 'Hothikieu@gmail.com',	N'Số 280, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đức')
+--CÂU 3: TRIGGER KIỂM TRA SỐ ĐIỆN THOẠI CỦA ĐỘC GIẢ:  10 CHỮ SỐ BẮT ĐẦU BẰNG 0
+CREATE TRIGGER tr_SDTDG
+ON DOCGIA
+FOR INSERT, UPDATE
+AS
+	BEGIN
+		DECLARE @SDT CHAR(10)
+		SELECT @SDT=SDT
+		FROM INSERTED
+
+		IF(LEN(@SDT)!=10 ) 
+		BEGIN
+			PRINT N'Số điện thoại phải có 10 số';
+			ROLLBACK TRAN
+		END
+		IF((CHARINDEX(LEFT(@SDT,1), '0')=0))
+		BEGIN
+			PRINT N'Số điện thoại phải bắt đầu bằng số 0';
+			ROLLBACK TRAN
+		END
+	END
+INSERT INTO DOCGIA 
+VALUES
+	('HTK',	N'Hồ Thị Kiều',	'1999-01-20', N'Nữ',	 '098763284', 'Hothikieu@gmail.com',	N'Số 280, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đức')
+
+INSERT INTO DOCGIA 
+VALUES
+	('HTK',	N'Hồ Thị Kiều',	'1999-01-20', N'Nữ',	 '9876328400', 'Hothikieu@gmail.com',	N'Số 280, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đức')
+--CÂU 4: TRIGGER KIỂM TRA EMAIL CỦA ĐỘC GIẢ CÓ ĐÚNG ĐỊNH DẠNG @GMAIL.COM KHÔNG?
+CREATE TRIGGER tr_EmailDG
+ON DOCGIA
+FOR INSERT, UPDATE
+AS
+	BEGIN
+		DECLARE @EMAIL CHAR(50)
+		SELECT @EMAIL=EMAIL
+		FROM INSERTED
+
+		IF(CHARINDEX('@gmail.com',@EMAIL)=0)
+		BEGIN
+			PRINT N'Email không hợp lệ';
+			ROLLBACK TRAN
+		END
+	END
+
+INSERT INTO DOCGIA 
+VALUES
+	('HTK',	N'Hồ Thị Kiều',	'1999-01-20', N'Nữ',	 '0987632844', 'Hothikieu@gma.com',	N'Số 280, đường 449, phường Tăng Nhơn Phú A,TP. Thủ Đức')
+--CÂU 5: TRIGGER KHÔNG CHO XÓA ĐỘC GIẢ KHI MÃ ĐỘC GIẢ KHÔNG TỒN TẠI
+CREATE TRIGGER tr_delDG
+ON DOCGIA
+FOR DELETE
+AS
+BEGIN
+	DECLARE @COUNT INT =0
+	SELECT @COUNT= COUNT(*)
+	FROM DELETED D JOIN DOCGIA DG ON D.MADG=DG.MADG
+	IF(@COUNT = 0)
+		BEGIN
+			PRINT N'KHONG TH XOA '
+			ROLLBACK TRAN
+		END
+END
+
+
+
+END
+CREATE TRIGGER tr_delDG
+ON DOCGIA
+FOR DELETE
+AS
+BEGIN
+	
+	DECLARE @COUNT1 INT=0
+	SELECT @COUNT1 = COUNT(*)
+	FROM DELETED JOIN DOCGIA ON DELETED.MADG=DOCGIA.MADG
+	IF(@COUNT1=0)
+	BEGIN
+		PRINT N'Không thể xóa độc giả do mã độc giả không tồn tại';
+		ROLLBACK TRAN
+	END
+END
+
+DELETE FROM DOCGIA WHERE MADG='MMM'
+
+--TAC GIA
+--CÂU 1: TRIGGER KIỂM TRA NGÀY SINH CỦA TÁC GIẢ: NGÀY SINH NHỎ HƠN NGÀY HIỆN TẠI
+CREATE TRIGGER tr_NgaySinhTG
+ON TACGIA
+FOR INSERT,UPDATE
+AS
+BEGIN
+	DECLARE @NGAYSINH DATETIME
+	SELECT @NGAYSINH = NGAYSINH
+	FROM INSERTED
+	IF (@NGAYSINH >= GETDATE())
+		BEGIN
+			PRINT N'Ngày sinh vượt qua ngày hiện tại';
+			ROLLBACK TRAN
+		END
+END
+
+INSERT INTO TACGIA 
+VALUES
+	('TPT', N'Trần Phan Trúc ',	'2023-06-13')
+ --CÂU 2: TRIGGER KHÔNG ĐƯỢC XÓA TÁC GIẢ KHI MÃ TÁC GIẢ KHÔNG TỒN TẠI
+CREATE TRIGGER tr_delTG
+ON TACGIA
+FOR DELETE
+AS
+BEGIN
+	DECLARE @COUNT1 INT=0
+	SELECT @COUNT1 = COUNT(*)
+	FROM DELETED JOIN TACGIA ON DELETED.MATG=TACGIA.MATG
+	IF(@COUNT1=0)
+	BEGIN
+		PRINT N'Không thể xóa tác giả do mã tác giả không tồn tại';
+		ROLLBACK TRAN
+	END
+END
+DELETE FROM TACGIA WHERE MATG='NBC'
+-- TRUYEN
+--CÂU 1 : VIẾT TRIGGER ĐẢM BẢO SỐ LƯỢNG CỦA TRUYỆN PHẢI LỚN HƠN 0
+CREATE TRIGGER TRG_SOLUONGTRUYEN
+ON TRUYEN
+FOR INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @SOLUONG INT 
+	SELECT @SOLUONG = SOLUONG
+	FROM inserted
+	IF(@SOLUONG<0)
+		BEGIN
+			PRINT N'SỐ LƯỢNG TRUYỆN TRONG KHO PHẢI LỚN HƠN HOẶC BẰNG 0'
+			ROLLBACK TRAN
+		END
+
+END
+GO
+SELECT * FROM TRUYEN
+INSERT INTO TRUYEN
+VALUES('KU','TPTG','NV001', N'Khế ước của mợ tư',-10, N'Kim Đồng')
+GO
+--CÂU 2: VIẾT TRIGGER ĐẢM BẢO INSERT, UPDATE CHỮ ĐẦU CỦA TRUYỆN IN HOA
+ALTER TRIGGER TRG_TRUYEN_INHOA
+ON TRUYEN
+FOR INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @TenT NVARCHAR(255)
+	SELECT @TenT = TENTRUYEN
+	FROM INSERTED
+	DECLARE @TenIn NVARCHAR(255)
+	SELECT @TenIn = SUBSTRING(@TenT,1,1) 
+	FROM INSERTED
+	UPDATE TRUYEN SET TENTRUYEN = UPPER(@TenIn) + SUBSTRING(@TenT,2,254) 
+	WHERE TENTRUYEN = @TenT
+END
+SELECT * FROM TRUYEN
+INSERT INTO TRUYEN 
+VALUES
+	('KU',	'TPTG',	'NV001', N'khế ước UPDATE',					24, N'Kim Đồng')
+DELETE FROM TRUYEN WHERE MATRUYEN = 'KU'
+-- DANH SÁCH MƯỢN
+--CÂU 1: VIẾT TRIGGER ĐẢM BẢO INSERT, UPDATE DSM : SỐ LƯỢNG < 0 
+CREATE TRIGGER TRG_DSM_SOLUONG
+ON DANHSACHMUON
+FOR INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @SL INT
+	SELECT @SL = SOLUONG
+	FROM inserted
+	IF(@SL <= 0 )
+	BEGIN
+		PRINT N'Số lượng truyện được mượn phải lớn hơn 0'
+		ROLLBACK TRAN
+	END 
+END
+SELECT * FROM DANHSACHMUON
+INSERT INTO DANHSACHMUON 
+VALUES
+	('PM00001', 'CN009',	-2),
+	('PM00001', 'CN002',		-1)
+	,
+--CÂU 2: VIẾT TRIGGER ĐẢM BẢO UPDATE DSM : SUM(SOLUONG) TRONG DSM = TONGSL TRONG PHIEUMUON, SOLUONGTON TRONG KHO PHAI CAP NHAT THEO
+CREATE TRIGGER TRG_SL
+ON DANHSACHMUON
+FOR INSERT, UPDATE
+AS
+BEGIN
+	-- KTRA TONGSL TRONG PHIEUMUON PHAI >0
+	DECLARE @TONGSL INT
+	SELECT @TONGSL = (SELECT SUM(SOLUONG) FROM INSERTED, PHIEUMUON WHERE INSERTED.MAPHIEUMUON= PHIEUMUON.MAPHIEUMUON)
+	IF(@TONGSL <=0)
+		BEGIN
+			PRINT N'TONGSL PHAI LON HON 0'
+			ROLLBACK TRAN
+		END 
+	-- UPDATE SOLUONG TRONG DSM THI TONGSL TRONG PHIEUMUON CAP NHAT THEO
+	UPDATE PHIEUMUON
+	SET TONGSL = TONGSL + (SELECT SUM(SOLUONG) FROM INSERTED WHERE PHIEUMUON.MAPHIEUMUON = INSERTED.MAPHIEUMUON)
+	WHERE PHIEUMUON.MAPHIEUMUON IN (SELECT MAPHIEUMUON IN INSERTED)
+
+	UPDATE PHIEUMUON
+	SET TONGSL = TONGSL - (SELECT SUM(SOLUONG) FROM DELETED WHERE PHIEUMUON.MAPHIEUMUON = DELETED.MAPHIEUMUON)
+	WHERE PHIEUMUON.MAPHIEUMUON IN (SELECT MAPHIEUMUON IN DELETED)
+	-- KTRA SOLUONGTON PHAI LON HON HOAC BANG 0
+	DECLARE @TONGSLINS INT
+	SELECT @TONGSLINS = (SELECT SUM(INSERTED.SOLUONG) FROM INSERTED , TRUYEN WHERE TRUYEN.MATRUYEN = INSERTED.MATRUYEN)
+	IF(@TONGSLINS > SLT)
+	BEGIN
+		PRINT N'SAI'
+		ROLLBACK TRAN
+	END
+END
+CREATE TRIGGER TRG_DSM_SUMSL
+ON DANHSACHMUON
+FOR  UPDATE
+AS
+BEGIN
+    -- KIEM TRA TONG SL PHAI LON HON 0
+	DECLARE @TONGSL INT
+	SELECT @TONGSL = (SELECT SUM(inserted.SOLUONG) FROM inserted, PHIEUMUON WHERE inserted.MAPHIEUMUON = PHIEUMUON.MAPHIEUMUON)
+	IF(@TONGSL <=0) 
+		BEGIN
+			PRINT N'TONG SL KHONG THE BE HON HOAC BANG 0. UPDATE KHONG THANH CONG!'
+			ROLLBACK TRAN
+		END
+	-- UPDATE DSM : SUM(SOLUONG) TRONG DSM = TONGSL TRONG PHIEUMUON
+	UPDATE PHIEUMUON
+	SET TONGSL = TONGSL + (SELECT SUM(SOLUONG) FROM inserted WHERE inserted.MAPHIEUMUON = PHIEUMUON.MAPHIEUMUON)
+	WHERE PHIEUMUON.MAPHIEUMUON IN (SELECT MAPHIEUMUON FROM inserted)
+	UPDATE PHIEUMUON
+	SET TONGSL = TONGSL - (SELECT SUM(SOLUONG) FROM deleted WHERE deleted.MAPHIEUMUON = PHIEUMUON.MAPHIEUMUON)
+	WHERE PHIEUMUON.MAPHIEUMUON IN (SELECT MAPHIEUMUON FROM deleted)
+	--UPDATE DSM THI SOLUONGTON TRONG KHO PHAI CAP NHAT THEO
+		-- KIỂM TRA TỔNG SL TỒN CỦA TRUYỆN ĐÓ PHẢI > = 0
+	DECLARE @TONGSLINS INT
+	SELECT @TONGSLINS = (SELECT SUM(inserted.SOLUONG) FROM inserted, TRUYEN WHERE TRUYEN.MATRUYEN= inserted.MATRUYEN)
+	IF(@TONGSLINS > (SELECT (TRUYEN.SOLUONG) FROM TRUYEN, inserted WHERE TRUYEN.MATRUYEN = inserted.MATRUYEN))
+		BEGIN
+			PRINT N'TONG SLT KHONG THE BE HON HOAC BANG 0. UPDATE KHONG THANH CONG!'
+			ROLLBACK TRAN
+		END
+		-- UPDATE DSM SOLUONGTON TRONG KHO PHAI CAP NHAT THEO
+	UPDATE TRUYEN
+	SET SOLUONG = SOLUONG - (SELECT SUM(inserted.SOLUONG) FROM inserted WHERE TRUYEN.MATRUYEN =inserted.MATRUYEN)
+	WHERE TRUYEN.MATRUYEN IN ( SELECT MATRUYEN FROM inserted)
+	UPDATE TRUYEN
+	SET SOLUONG = SOLUONG + (SELECT SUM(deleted.SOLUONG) FROM deleted WHERE TRUYEN.MATRUYEN =deleted.MATRUYEN)
+	WHERE TRUYEN.MATRUYEN IN ( SELECT MATRUYEN FROM deleted)
+END
+-- PHIẾU MƯỢN
+--CÂU 1 : VIẾT TRIGGER ĐẢM BẢO INSERT, UPDATE NGAYMUON(<=TODAY) & NGAYMUON <= NGAYTRA
+ALTER TRIGGER TRG_PM_DATE
+ON PHIEUMUON
+FOR INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @NGAYMUON DATETIME, @NGAYTRA DATETIME
+	SELECT @NGAYMUON = NGAYMUON , @NGAYTRA = NGAYTRA
+	FROM inserted
+	IF(@NGAYMUON > @NGAYTRA)
+	BEGIN
+		PRINT N'Ngày mượn phải bé hơn hoặc bằng ngày trả'
+		ROLLBACK TRAN
+	END
+	IF(@NGAYMUON > GETDATE())
+	BEGIN
+		PRINT N'Ngày mượn phải bé hơn hoặc bằng ngày hiện tại'
+		ROLLBACK TRAN
+	END
+END
+
+INSERT INTO PHIEUMUON VALUES ('PM','NV001', 'CQN', '2022- 08- 26',	'2022-09-26', 7, N'Chưa trả')
+
+--Câu 4: Viết trigger đảm bảo INSERT DSM thi TONGSL cua PHIEUMUON cap nhat theo
+ALTER TRIGGER TRG_INSERT_TONGSL
+ON DANHSACHMUON
+FOR INSERT
+AS
+BEGIN
+
+--update DSM thi SOLUONGTON TRONG KHO PHAI CAP NHAT THEO
+	DECLARE @TONGSLINS INT
+	SELECT @TONGSLINS = (SELECT SUM(inserted.SOLUONG) FROM inserted,TRUYEN WHERE inserted.MATRUYEN = TRUYEN.MATRUYEN)
+	IF(@TONGSLINS >( SELECT(TRUYEN.SOLUONG) FROM TRUYEN, inserted WHERE inserted.MATRUYEN = TRUYEN.MATRUYEN ) )
+		BEGIN
+			PRINT N'TONG SLT KHONG THE BE HON HOAC BANG 0. UPDATE KHONG THANH CONG!'
+			ROLLBACK TRAN
+		END
+	UPDATE TRUYEN
+	SET SOLUONG = SOLUONG - (SELECT SUM(SOLUONG) FROM inserted WHERE inserted.MATRUYEN = TRUYEN.MATRUYEN)
+	WHERE TRUYEN.MATRUYEN IN ( SELECT MATRUYEN FROM inserted) 
+END
+GO
+
+INSERT INTO PHIEUMUON VALUES ('PM3','NV001', 'CQN', '2022- 08- 26',	'2022-09-26', 7, N'Chưa trả')
+
+INSERT INTO DANHSACHMUON 
+VALUES
+	('PM3', 'BCT',	50),
+	('PM3', 'CGDC',		10)
+
+
+
+
+
+
+
